@@ -1,0 +1,40 @@
+{
+  "Actions": [
+    {
+      "UUID": "com.biancogabry.whitemixer.action",
+      "Name": "App/s Volume controller",
+      "Tooltip": "Rotate to change the volume of the selected applications",
+      "Icon": "btn",
+      "States": [
+        {
+          "Image": "btn"
+        }
+      ],
+      "Controllers": [
+        "Keypad",
+        "Knob"
+      ],
+      "SupportedInMultiActions": false,
+      "PropertyInspectorPath": "pi.html"
+    }
+  ],
+  "SDKVersion": 1,
+  "Author": "BiancoGabry",
+  "Category": "WhiteMixer",
+  "CategoryIcon": "icon",
+  "CodePath": "AjazzDeejBackend.exe",
+  "CodePathWin": "AjazzDeejBackend.exe",
+  "Description": "Volume Controller",
+  "Name": "WhiteMixer",
+  "Icon": "icon",
+  "Version": "1.0.0",
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Software": {
+    "MinimumVersion": "2.9"
+  }
+}

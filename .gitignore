@@ -1,0 +1,50 @@
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.ipch
+*.db
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+*.vsidx
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+*.cache
+*.log
+*.iobj
+*.ipdb
+*.tlog
+*.recipe
+
+# Build outputs (mantieni solo quelli nella cartella sdPlugin)
+*.exe
+*.dll
+*.pdb
+!*.sdPlugin/*.exe
+!*.sdPlugin/*.dll
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Archives
+*.rar
+*.zip

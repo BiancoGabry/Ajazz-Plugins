@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Configurazione Volume</title>
+    <style>
+        body { background-color: #2D2D2D; color: #999999; font-family: Arial, sans-serif; font-size: 13px; }
+        .row { border-bottom: 1px solid #444; padding: 8px 0; }
+        label { display: block; margin-bottom: 4px; color: #fff; }
+        input[type="text"] { width: 95%; padding: 4px; background: #3D3D3D; border: 1px solid #555; color: white; margin-bottom: 5px; }
+        input[type="color"] { width: 100%; height: 25px; border: none; }
+        button { margin-top: 15px; width: 100%; padding: 8px; background: #0078D7; color: white; border: none; cursor: pointer; }
+        button:hover { background: #1084E0; }
+        h3 { color: white; margin-top: 0; }
+    </style>
+</head>
+<body>
+    <h3>App da Monitorare</h3>
+    <div id="container"></div>
+    <button onclick="saveSettings()">SALVA CONFIGURAZIONE</button>
+
+    <script>
+        var websocket = null, uuid = null;
+
+        // Funzione chiamata automaticamente dal software Ajazz
+        function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
+            uuid = inPluginUUID;
+            websocket = new WebSocket("ws://127.0.0.1:" + inPort);
+            
+            websocket.onopen = function() {
+                var json = { "event": inRegisterEvent, "uuid": inPluginUUID };
+                websocket.send(JSON.stringify(json));
+                
+                // Chiediamo le impostazioni attuali
+                websocket.send(JSON.stringify({ "event": "getSettings", "context": uuid }));
+            };
+
+            websocket.onmessage = function(evt) {
+                var jsonObj = JSON.parse(evt.data);
+                if (jsonObj.event === "didReceiveSettings") {
+                    loadSettings(jsonObj.payload.settings);
+                }
+            };
+        }
+
+        // Genera 4 righe di input
+        const container = document.getElementById('container');
+        for(let i=0; i<4; i++) {
+            container.innerHTML += `
+            <div class="row">
+                <label>EXE (es. spotify.exe)</label>
+                <input type="text" id="exe_${i}">
+                <label>Nome Visibile</label>
+                <input type="text" id="label_${i}">
+                <label>Colore</label>
+                <input type="color" id="color_${i}" value="#ffffff">
+            </div>`;
+        }
+
+        function saveSettings() {
+            var apps = [];
+            for(let i=0; i<4; i++) {
+                let exe = document.getElementById(`exe_${i}`).value;
+                let label = document.getElementById(`label_${i}`).value;
+                let color = document.getElementById(`color_${i}`).value;
+                if(exe) apps.push({ ExeName: exe, Label: label, HexColor: color });
+            }
+            if(websocket) {
+                var json = {
+                    "event": "setSettings",
+                    "context": uuid,
+                    "payload": { "apps": apps } // Attenzione: deve combaciare con C#
+                };
+                websocket.send(JSON.stringify(json));
+            }
+        }
+
+        function loadSettings(settings) {
+            if(settings && settings.apps) {
+                settings.apps.forEach((app, i) => {
+                    if(i < 4) {
+                        document.getElementById(`exe_${i}`).value = app.ExeName || "";
+                        document.getElementById(`label_${i}`).value = app.Label || "";
+                        document.getElementById(`color_${i}`).value = app.HexColor || "#ffffff";
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>

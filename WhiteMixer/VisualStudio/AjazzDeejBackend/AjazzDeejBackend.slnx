@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="AjazzDeejBackend/AjazzDeejBackend.vcxproj" Id="74647e35-dbcb-45db-b16c-2e866f8a2106" />
+</Solution>

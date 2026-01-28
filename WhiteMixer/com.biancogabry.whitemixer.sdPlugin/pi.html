@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Ajazz Deej Settings</title>
+    <style>
+        body { background-color: #2D2D2D; color: #b6b6b6; font-family: Arial, sans-serif; font-size: 12px; padding: 10px;}
+        .sdpi-item { display: flex; margin-bottom: 10px; align-items: center; min-height: 30px;}
+        .sdpi-item-label { width: 100px; text-align: right; margin-right: 10px;}
+        .sdpi-item-value { flex: 1; display: flex; align-items: center; }
+        input[type="text"] { width: 95%; padding: 4px; }
+        input[type="range"] { width: 80%; }
+        span.value-display { margin-left: 10px; width: 30px;}
+        p { margin-top: 5px; font-size: 10px; color: #888; margin-left: 110px;}
+        hr { border: 0; border-top: 1px solid #444; margin: 15px 0;}
+    </style>
+</head>
+<body>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">App List</div>
+        <div class="sdpi-item-value">
+            <input type="text" id="appList" placeholder="chrome.exe, discord.exe" onchange="sendSettings()">
+        </div>
+    </div>
+    <p>Separa i nomi con una virgola.</p>
+
+    <hr>
+
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">Sensitivity</div>
+        <div class="sdpi-item-value">
+            <input type="range" id="sensitivity" min="1" max="20" value="5" oninput="updateLabel()" onchange="sendSettings()">
+            <span id="sensValue" class="value-display">5%</span>
+        </div>
+    </div>
+
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">Dynamic</div>
+        <div class="sdpi-item-value">
+            <input type="checkbox" id="dynamicSteps" onchange="sendSettings()">
+            <label for="dynamicSteps" style="margin-left: 5px;">Smart Steps (Low vol = precise)</label>
+        </div>
+    </div>
+
+    <script>
+        var websocket = null;
+        var uuid = null;
+
+        function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
+            uuid = inUUID;
+            var actionInfo = JSON.parse(inActionInfo);
+            websocket = new WebSocket('ws://127.0.0.1:' + inPort);
+
+            websocket.onopen = function () {
+                var json = { "event": inRegisterEvent, "uuid": inUUID };
+                websocket.send(JSON.stringify(json));
+                
+                // Carica impostazioni salvate
+                if (actionInfo.payload.settings) {
+                    if (actionInfo.payload.settings.appList) {
+                        document.getElementById('appList').value = actionInfo.payload.settings.appList;
+                    }
+                    if (actionInfo.payload.settings.sensitivity) {
+                        document.getElementById('sensitivity').value = actionInfo.payload.settings.sensitivity;
+                        updateLabel();
+                    }
+                    // Carica checkbox
+                    if (actionInfo.payload.settings.dynamicSteps) {
+                        document.getElementById('dynamicSteps').checked = actionInfo.payload.settings.dynamicSteps;
+                    }
+                }
+            };
+        }
+
+        function updateLabel() {
+            var val = document.getElementById('sensitivity').value;
+            document.getElementById('sensValue').innerText = val + "%";
+        }
+
+        function sendSettings() {
+            var apps = document.getElementById('appList').value;
+            var sens = document.getElementById('sensitivity').value;
+            var dyn = document.getElementById('dynamicSteps').checked; // Leggi checkbox
+            
+            var json = {
+                "event": "setSettings",
+                "context": uuid,
+                "payload": {
+                    "appList": apps,
+                    "sensitivity": sens,
+                    "dynamicSteps": dyn
+                }
+            };
+            websocket.send(JSON.stringify(json));
+        }
+    </script>
+</body>
+</html>

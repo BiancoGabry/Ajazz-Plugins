@@ -1,0 +1,39 @@
+{
+    "Actions": [
+        {
+            "UUID": "com.biancogabry.volumedisplay.action",
+            "Name": "App Volume List",
+            "Tooltip": "Mostra volume di app multiple",
+            "Icon": "btn",
+            "States": [
+                {
+                    "Image": "btn"
+                }
+            ],
+            "Controllers": [
+                "Keypad"
+            ],
+            "SupportedInMultiActions": false,
+            "PropertyInspectorPath": "pi.html"
+        }
+    ],
+    "SDKVersion": 1,
+    "Author": "BiancoGabry",
+    "Category": "VolumeDisplay",
+    "CategoryIcon": "icon",
+    "CodePath": "MultiVolumeBackend.exe",
+    "CodePathWin": "MultiVolumeBackend.exe",
+    "Description": "Volume Display",
+    "Name": "VolumeDisplay",
+    "Icon": "icon",
+    "Version": "1.0.0",
+    "OS": [
+        {
+            "Platform": "windows",
+            "MinimumVersion": "10"
+        }
+    ],
+    "Software": {
+        "MinimumVersion": "2.9"
+    }
+}
