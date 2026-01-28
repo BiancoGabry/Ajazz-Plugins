@@ -44,7 +44,3 @@ x86/
 *.user
 *.userosscache
 *.sln.docstates
-
-# Archives
-*.rar
-*.zip
